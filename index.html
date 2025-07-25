@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E2E Encrypted Messenger</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 E2E Encrypted Messenger</h1>
+            <div class="user-status">
+                <span id="userStatus">Setup Required</span>
+                <button id="disconnectBtn" style="display: none;">New Chat</button>
+            </div>
+        </header>
+
+        <!-- Setup Screen -->
+        <div id="setupScreen" class="screen">
+            <div class="setup-container">
+                <h2>🔑 Secure Chat Setup</h2>
+                
+                <!-- Step 1: Identity -->
+                <div class="setup-section">
+                    <h3>Step 1: Your Identity</h3>
+                    <input type="text" id="usernameInput" placeholder="Enter your username" maxlength="20">
+                    <button id="generateKeysBtn">Generate Encryption Keys</button>
+                    <div id="keyGenStatus" class="status-message" style="display: none;"></div>
+                </div>
+
+                <!-- Step 2: Your Keys -->
+                <div class="setup-section" id="keySection" style="display: none;">
+                    <h3>Step 2: Your Public Key</h3>
+                    <p class="help-text">Share this with your contact:</p>
+                    <div class="key-display">
+                        <textarea id="myPublicKey" readonly placeholder="Your public key will appear here"></textarea>
+                        <div class="button-group">
+                            <button id="copyPublicKeyBtn">📋 Copy Key</button>
+                            <button id="showQRBtn">📱 Show QR Code</button>
+                        </div>
+                    </div>
+                    <div id="qrCode" style="display: none; text-align: center; margin-top: 1rem;"></div>
+                </div>
+
+                <!-- Step 3: Contact Setup -->
+                <div class="setup-section" id="contactSection" style="display: none;">
+                    <h3>Step 3: Contact's Public Key</h3>
+                    <p class="help-text">Paste your contact's public key:</p>
+                    <textarea id="contactPublicKey" placeholder="Paste your contact's public key here..."></textarea>
+                    <button id="verifyContactBtn">Verify Contact Key</button>
+                    <div id="contactVerifyStatus" class="status-message" style="display: none;"></div>
+                </div>
+
+                <!-- Step 4: Start or Join Chat -->
+                <div class="setup-section" id="chatOptionsSection" style="display: none;">
+                    <h3>Step 4: Start Chatting</h3>
+                    <div class="chat-options">
+                        <div class="option-card">
+                            <h4>📝 Create New Chat</h4>
+                            <p>Start a new encrypted conversation</p>
+                            <button id="createChatBtn">Create Chat Room</button>
+                        </div>
+                        <div class="option-divider">OR</div>
+                        <div class="option-card">
+                            <h4>🔗 Join Existing Chat</h4>
+                            <p>Join a chat using a Chat ID</p>
+                            <input type="text" id="joinChatInput" placeholder="Enter Chat ID">
+                            <button id="joinChatBtn">Join Chat</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat ID Display -->
+                <div class="setup-section" id="chatIdSection" style="display: none;">
+                    <h3>🎉 Chat Room Ready!</h3>
+                    <p class="help-text">Share this Chat ID with your contact:</p>
+                    <div class="key-display">
+                        <input type="text" id="chatIdDisplay" readonly>
+                        <button id="copyChatIdBtn">📋 Copy Chat ID</button>
+                    </div>
+                    <div class="status-message success">
+                        <p>✅ Chat room created successfully!</p>
+                        <p>Your contact should paste this Chat ID in the "Join Chat" field.</p>
+                    </div>
+                    <button id="enterChatBtn">Enter Chat Room</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Screen -->
+        <div id="chatScreen" class="screen" style="display: none;">
+            <div class="chat-header">
+                <div class="contact-info">
+                    <span id="contactName">🔐 Encrypted Chat</span>
+                    <span class="encryption-status">End-to-End Encrypted</span>
+                    <span class="chat-id-display">Room: <span id="activeChatId"></span></span>
+                </div>
+                <div id="connectionStatus" class="connection-status">Connected</div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-message">
+                    <div class="welcome-icon">🔒</div>
+                    <h3>Secure Chat Established</h3>
+                    <p>Messages are encrypted end-to-end. Only you and your contact can read them.</p>
+                </div>
+            </div>
+
+            <div class="message-input">
+                <input type="text" id="messageInput" placeholder="Type your encrypted message..." maxlength="500">
+                <button id="sendBtn">🚀 Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="crypto.js"></script>
+    <script src="simple-relay.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
