@@ -1,4 +1,8 @@
-/** * Media UI Manager * Handles UI components for multimedia sharing */class MediaUIManager {
+/**
+ * Media UI Manager
+ * Handles UI components for multimedia sharing
+ */
+class MediaUIManager {
     constructor(mediaEncryption, messageRelay, locationManager) {
         this.mediaEncryption = mediaEncryption;
         this.messageRelay = messageRelay;
@@ -8,6 +12,7 @@
     }
 
     initializeUI() {
+        this.createMediaControls();
         this.createProgressModal();
         this.createLocationModal();
         this.createMediaViewer();
@@ -17,23 +22,21 @@
         const messageInput = document.querySelector('.message-input');
         if (!messageInput) return;
 
-        // Check if media controls already exist
-        if (document.querySelector('.media-controls')) return;
-
         const mediaControls = document.createElement('div');
         mediaControls.className = 'media-controls';
         mediaControls.innerHTML = `
             <button class="media-btn" id="imageBtn" title="Share Image">📸</button>
             <button class="media-btn" id="videoBtn" title="Share Video">🎥</button>
             <button class="media-btn" id="locationBtn" title="Share Location">📍</button>
+            <div class="live-location-indicator" id="liveLocationIndicator" style="display: none;">
+                <span class="live-dot">🔴</span>
+                <span class="live-text">Live</span>
+            </div>
             <input type="file" id="imageInput" accept="image/*" style="display: none;">
             <input type="file" id="videoInput" accept="video/*" style="display: none;">
         `;
         
         messageInput.insertBefore(mediaControls, messageInput.firstChild);
-        
-        // Bind events immediately after creating controls
-        this.bindMediaControlEvents();
     }
 
     createProgressModal() {
@@ -115,16 +118,33 @@
     }
 
     bindEvents() {
-        // Modal events (these exist from initialization)
-        this.bindModalEvents();
-        
-        // Update live location status
-        this.locationManager.addLocationCallback(() => {
-            this.updateLiveLocationStatus();
+        // Image sharing
+        document.getElementById('imageBtn')?.addEventListener('click', () => {
+            document.getElementById('imageInput').click();
         });
-    }
+        
+        document.getElementById('imageInput')?.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.handleImageShare(e.target.files[0]);
+            }
+        });
 
-    bindModalEvents() {
+        // Video sharing
+        document.getElementById('videoBtn')?.addEventListener('click', () => {
+            document.getElementById('videoInput').click();
+        });
+        
+        document.getElementById('videoInput')?.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.handleVideoShare(e.target.files[0]);
+            }
+        });
+
+        // Location sharing
+        document.getElementById('locationBtn')?.addEventListener('click', () => {
+            this.showLocationModal();
+        });
+
         // Location modal events
         document.getElementById('closeLocationModal')?.addEventListener('click', () => {
             this.hideLocationModal();
@@ -157,34 +177,10 @@
         document.getElementById('cancelProgress')?.addEventListener('click', () => {
             this.hideProgressModal();
         });
-    }
 
-    bindMediaControlEvents() {
-        // Image sharing
-        document.getElementById('imageBtn')?.addEventListener('click', () => {
-            document.getElementById('imageInput').click();
-        });
-        
-        document.getElementById('imageInput')?.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                this.handleImageShare(e.target.files[0]);
-            }
-        });
-
-        // Video sharing
-        document.getElementById('videoBtn')?.addEventListener('click', () => {
-            document.getElementById('videoInput').click();
-        });
-        
-        document.getElementById('videoInput')?.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                this.handleVideoShare(e.target.files[0]);
-            }
-        });
-
-        // Location sharing
-        document.getElementById('locationBtn')?.addEventListener('click', () => {
-            this.showLocationModal();
+        // Update live location status
+        this.locationManager.addLocationCallback(() => {
+            this.updateLiveLocationStatus();
         });
     }
 
@@ -293,13 +289,16 @@
     updateLiveLocationStatus() {
         const controls = document.getElementById('liveLocationControls');
         const shareBtn = document.getElementById('shareLiveLocation');
+        const indicator = document.getElementById('liveLocationIndicator');
         
         if (this.locationManager.isLiveTrackingActive()) {
             controls.style.display = 'block';
             shareBtn.style.display = 'none';
+            indicator.style.display = 'flex';
         } else {
             controls.style.display = 'none';
             shareBtn.style.display = 'block';
+            indicator.style.display = 'none';
         }
     }
 
