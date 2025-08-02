@@ -23,6 +23,16 @@ class LocationManager {
                 return;
             }
 
+            // Check for location permission
+            if (navigator.permissions) {
+                navigator.permissions.query({name: 'geolocation'}).then((result) => {
+                    if (result.state === 'denied') {
+                        reject(new Error('Location access denied. Please enable location permissions.'));
+                        return;
+                    }
+                });
+            }
+
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const locationData = {
@@ -40,7 +50,19 @@ class LocationManager {
                     resolve(locationData);
                 },
                 (error) => {
-                    reject(new Error(`Location error: ${error.message}`));
+                    let errorMessage = 'Failed to get location';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Location access denied by user';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Location information unavailable';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Location request timed out';
+                            break;
+                    }
+                    reject(new Error(errorMessage));
                 },
                 {
                     enableHighAccuracy: true,
