@@ -344,19 +344,9 @@ class EncryptedMessenger {
 
     // Initialize media features after successful connection
     initializeMediaFeatures() {
-        try {
-            this.mediaEncryption = new MediaEncryptionManager(this.encryption);
-            this.locationManager = new LocationManager(this.mediaEncryption, this.messageRelay);
-            this.mediaUI = new MediaUIManager(this.mediaEncryption, this.messageRelay, this.locationManager);
-            
-            // Create media controls now that the chat screen is visible
-            this.mediaUI.createMediaControls();
-            
-            console.log('Media features initialized successfully');
-        } catch (error) {
-            console.error('Failed to initialize media features:', error);
-            // Continue without media features if there's an error
-        }
+        this.mediaEncryption = new MediaEncryptionManager(this.encryption);
+        this.locationManager = new LocationManager(this.mediaEncryption, this.messageRelay);
+        this.mediaUI = new MediaUIManager(this.mediaEncryption, this.messageRelay, this.locationManager);
     }
 
     // Send encrypted message
@@ -584,4 +574,8 @@ class EncryptedMessenger {
 // Initialize the application when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new EncryptedMessenger();
+    
+    // Demonstrate location sharing functionality
+    console.log('🚀 Encrypted Messenger with Location Sharing Loaded!');
+    console.log('📍 Type LocationSharingDemo.demonstrateLocationSharing() in console to see demo');
 });
