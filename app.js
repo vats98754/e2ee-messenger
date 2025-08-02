@@ -7,6 +7,11 @@ class EncryptedMessenger {
         this.isConnected = false;
         this.chatId = '';
         
+        // Initialize media features
+        this.mediaEncryption = null;
+        this.locationManager = null;
+        this.mediaUI = null;
+        
         this.initializeUI();
         this.bindEvents();
         this.showStatus('Ready to setup secure chat');
@@ -309,12 +314,15 @@ class EncryptedMessenger {
             .catch(() => this.showNotification('❌ Failed to copy Chat ID', 'error'));
     }
 
-    // Enter chat room
+        // Enter chat room
     enterChatRoom() {
         if (!this.chatId) {
-            this.showNotification('No active chat room', 'error');
+            this.showNotification('❌ No chat room selected', 'error');
             return;
         }
+        
+        // Initialize media features
+        this.initializeMediaFeatures();
         
         this.elements.setupScreen.style.display = 'none';
         this.elements.chatScreen.style.display = 'flex';
@@ -328,10 +336,27 @@ class EncryptedMessenger {
         // Clear welcome message after a few seconds
         setTimeout(() => {
             const welcomeMessage = document.querySelector('.welcome-message');
-            if (welcomeMessage) {
-                welcomeMessage.style.display = 'none';
+            if (welcomeMessage && welcomeMessage.parentNode.children.length === 1) {
+                welcomeMessage.style.opacity = '0.5';
             }
         }, 3000);
+    }
+
+    // Initialize media features after successful connection
+    initializeMediaFeatures() {
+        try {
+            this.mediaEncryption = new MediaEncryptionManager(this.encryption);
+            this.locationManager = new LocationManager(this.mediaEncryption, this.messageRelay);
+            this.mediaUI = new MediaUIManager(this.mediaEncryption, this.messageRelay, this.locationManager);
+            
+            // Create media controls now that the chat screen is visible
+            this.mediaUI.createMediaControls();
+            
+            console.log('Media features initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize media features:', error);
+            // Continue without media features if there's an error
+        }
     }
 
     // Send encrypted message
@@ -372,20 +397,25 @@ class EncryptedMessenger {
     // Handle received encrypted message
     async handleReceivedMessage(message) {
         try {
-            // Decrypt the message
-            const decryptedContent = await this.encryption.smartDecrypt(message.content);
+            const messageData = JSON.parse(message.content);
             
-            // Display in UI
-            this.displayMessage(decryptedContent, 'received', message.sender);
-            
-            // Show notification if window is not focused
-            if (document.hidden) {
-                this.showNotification(`New message from ${message.sender}`, 'info');
+            // Handle different message types
+            if (messageData.type === 'media' || messageData.type === 'location') {
+                // Use media UI to render multimedia messages
+                if (this.mediaUI) {
+                    this.mediaUI.renderMediaMessage({
+                        ...messageData,
+                        sender: 'contact'
+                    }, this.elements.messagesContainer);
+                }
+            } else {
+                // Handle regular text messages
+                const decryptedContent = await this.encryption.smartDecrypt(messageData.content);
+                this.displayMessage(decryptedContent, 'received', message.sender);
             }
-            
         } catch (error) {
-            console.error('Decrypt message error:', error);
-            this.displayMessage('🔒 [Failed to decrypt message]', 'received', message.sender, true);
+            console.error('Failed to handle received message:', error);
+            this.displayMessage('❌ Failed to decrypt message', 'received', message.sender, true);
         }
     }
 
@@ -438,10 +468,20 @@ class EncryptedMessenger {
 
     // Start new chat (reset everything)
     startNewChat() {
+        // Stop any live location sharing
+        if (this.locationManager && this.locationManager.isLiveTrackingActive()) {
+            this.locationManager.stopLiveLocationSharing();
+        }
+        
         this.messageRelay.disconnect();
         this.isConnected = false;
         this.chatId = '';
         this.contactName = '';
+        
+        // Reset media features
+        this.mediaEncryption = null;
+        this.locationManager = null;
+        this.mediaUI = null;
         
         // Reset UI
         this.elements.setupScreen.style.display = 'block';

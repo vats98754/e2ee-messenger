@@ -107,7 +107,7 @@ class SimpleMessageRelay {
         };
     }
 
-    // Send an encrypted message
+    // Send an encrypted message (now supports multimedia)
     async sendMessage(encryptedContent) {
         if (!this.chatId || !this.username) {
             throw new Error('Chat not initialized');
@@ -122,13 +122,29 @@ class SimpleMessageRelay {
 
             const chat = JSON.parse(chatData);
             
+            // Parse message to determine type
+            let messageType = 'text';
+            let messageSize = encryptedContent.length;
+            
+            try {
+                const parsed = JSON.parse(encryptedContent);
+                if (parsed.type === 'media' || parsed.type === 'location') {
+                    messageType = parsed.type;
+                    messageSize = JSON.stringify(parsed.content).length;
+                }
+            } catch (e) {
+                // Regular text message
+            }
+            
             // Create message object
             const message = {
                 id: Date.now() + Math.random(), // Unique ID
                 sender: this.username,
                 content: encryptedContent,
                 timestamp: new Date().toISOString(),
-                encrypted: true
+                encrypted: true,
+                type: messageType,
+                size: messageSize
             };
             
             // Add to chat
@@ -142,13 +158,20 @@ class SimpleMessageRelay {
                 this.broadcastChannel.postMessage({
                     type: 'new_message',
                     sender: this.username,
-                    messageId: message.id
+                    messageId: message.id,
+                    messageType: messageType
                 });
             }
             
             this.lastMessageCount = chat.messages.length;
             
-            this.updateStatus('connected', '📤 Message sent');
+            if (messageType === 'media') {
+                this.updateStatus('connected', '📤 Media sent');
+            } else if (messageType === 'location') {
+                this.updateStatus('connected', '📍 Location shared');
+            } else {
+                this.updateStatus('connected', '📤 Message sent');
+            }
             
         } catch (error) {
             console.error('Failed to send message:', error);
