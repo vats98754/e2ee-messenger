@@ -1,0 +1,465 @@
+/* Media Controls Styles */
+.media-controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 1rem;
+}
+
+.media-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #075e54;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.media-btn:hover {
+    background: #128c7e;
+    transform: scale(1.1);
+}
+
+.media-btn:active {
+    transform: scale(0.95);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #075e54;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.close-btn:hover {
+    background: #f0f0f0;
+}
+
+/* Progress Modal Styles */
+.progress-container {
+    margin: 1.5rem 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #075e54, #128c7e);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+.progress-text {
+    text-align: center;
+    font-weight: 600;
+    color: #075e54;
+}
+
+/* Location Modal Styles */
+.location-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.location-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: left;
+}
+
+.location-option:hover {
+    border-color: #075e54;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.option-icon {
+    font-size: 2rem;
+    min-width: 50px;
+}
+
+.option-text strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #075e54;
+}
+
+.option-text p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.live-location-controls {
+    text-align: center;
+    padding: 1rem;
+    background: #ffe6e6;
+    border-radius: 10px;
+    border: 2px solid #ffcccc;
+}
+
+.live-status {
+    margin-bottom: 1rem;
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+.btn-danger {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btn-danger:hover {
+    background: #b71c1c;
+}
+
+.btn-secondary {
+    background: #666;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}
+
+/* Media Viewer Styles */
+.media-viewer {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.viewer-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.viewer-content {
+    background: white;
+    border-radius: 15px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+.viewer-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+}
+
+.viewer-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.viewer-actions {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    background: #f8f9fa;
+}
+
+/* Media Message Styles */
+.media-message {
+    max-width: 300px;
+}
+
+.media-preview {
+    background: #f0f0f0;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.view-media-btn, .view-location-btn {
+    background: #075e54;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    transition: background 0.3s;
+}
+
+.view-media-btn:hover, .view-location-btn:hover {
+    background: #128c7e;
+}
+
+/* Location Display Styles */
+.location-display {
+    text-align: center;
+}
+
+.location-display h4 {
+    margin-bottom: 1rem;
+    color: #075e54;
+}
+
+.location-display p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.external-map-link {
+    display: inline-block;
+    background: #075e54;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: background 0.3s;
+}
+
+.external-map-link:hover {
+    background: #128c7e;
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1002;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    max-width: 300px;
+    transform: translateX(350px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: #4caf50;
+}
+
+.notification.error {
+    background: #f44336;
+}
+
+.notification.info {
+    background: #2196f3;
+}
+
+/* Responsive Media Styles */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-width: none;
+        width: auto;
+    }
+    
+    .viewer-overlay {
+        padding: 1rem;
+    }
+    
+    .viewer-content {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    
+    .media-controls {
+        gap: 0.25rem;
+        margin-right: 0.5rem;
+    }
+    
+    .media-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .notification {
+        right: 10px;
+        top: 10px;
+        max-width: calc(100% - 20px);
+        transform: translateX(calc(100% + 20px));
+    }
+}
+
+/* Animation for live location indicator */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.live-location-indicator {
+    animation: pulse 2s infinite;
+}
+
+/* File input styling */
+input[type="file"] {
+    display: none;
+}
+
+/* Media message specific styles */
+.message.received .media-message {
+    background: white;
+}
+
+.message.sent .media-message {
+    background: #dcf8c6;
+}
+
+/* Enhanced hover effects for better UX */
+.location-option:active {
+    transform: scale(0.98);
+}
+
+.view-media-btn:active, .view-location-btn:active {
+    transform: scale(0.95);
+}
+
+/* Loading states */
+.media-btn.loading {
+    background: #ccc;
+    cursor: not-allowed;
+    animation: pulse 1.5s infinite;
+}
+
+/* Better iframe styling for maps */
+iframe {
+    border: none;
+    border-radius: 8px;
+}
+
+/* Improved spacing for media messages */
+.media-message .message-time {
+    margin-top: 0.5rem;
+}
