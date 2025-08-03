@@ -387,34 +387,21 @@ class EncryptedMessenger {
     // Handle received encrypted message
     async handleReceivedMessage(message) {
         try {
-            // First try to decrypt as a regular text message
-            try {
-                const decryptedContent = await this.encryption.smartDecrypt(message.content);
-                this.displayMessage(decryptedContent, 'received', message.sender);
-                return;
-            } catch (textDecryptError) {
-                // If that fails, try to parse as multimedia message
-                try {
-                    const messageData = JSON.parse(message.content);
-                    
-                    // Handle different message types
-                    if (messageData.type === 'media' || messageData.type === 'location') {
-                        // Use media UI to render multimedia messages
-                        if (this.mediaUI) {
-                            this.mediaUI.renderMediaMessage({
-                                ...messageData,
-                                sender: 'contact'
-                            }, this.elements.messagesContainer);
-                        }
-                    } else {
-                        // Handle other structured messages
-                        const decryptedContent = await this.encryption.smartDecrypt(messageData.content);
-                        this.displayMessage(decryptedContent, 'received', message.sender);
-                    }
-                } catch (jsonError) {
-                    // If both fail, show the original error
-                    throw textDecryptError;
+            const messageData = JSON.parse(message.content);
+            
+            // Handle different message types
+            if (messageData.type === 'media' || messageData.type === 'location') {
+                // Use media UI to render multimedia messages
+                if (this.mediaUI) {
+                    this.mediaUI.renderMediaMessage({
+                        ...messageData,
+                        sender: 'contact'
+                    }, this.elements.messagesContainer);
                 }
+            } else {
+                // Handle regular text messages
+                const decryptedContent = await this.encryption.smartDecrypt(messageData.content);
+                this.displayMessage(decryptedContent, 'received', message.sender);
             }
         } catch (error) {
             console.error('Failed to handle received message:', error);
