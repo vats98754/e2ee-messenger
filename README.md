@@ -34,7 +34,6 @@ A browser-based encrypted messenger that runs entirely client-side using the Web
 
 - `crypto.js` - RSA + AES hybrid encryption implementation  
 - `media-crypto.js` - Multimedia encryption with chunked streaming  
-- `advanced-codecs.js` - Custom image/video codecs with optimized compression
 - `location-manager.js` - Location services with live tracking  
 - `media-ui.js` - UI components for multimedia features  
 - `simple-relay.js` - localStorage + BroadcastChannel message transport  
@@ -54,28 +53,23 @@ A browser-based encrypted messenger that runs entirely client-side using the Web
 ## Media Features
 
 ### 📸 Image Sharing
-- **Advanced WebP Compression**: Custom codec with intelligent quality optimization
-- **Smart Size Management**: Automatic compression to meet 2MB target while preserving quality
-- **Security Watermarking**: Subtle encrypted timestamps for authenticity
-- **Progressive Quality**: Content-aware compression based on image complexity
-- **Client-side Encryption**: End-to-end encrypted before transmission
-- **Support for all common image formats**: JPEG, PNG, WebP, GIF, BMP
+- Automatic WebP compression for smaller file sizes
+- Client-side encryption before transmission
+- Progressive decryption with loading indicators
+- Support for all common image formats
 
 ### 🎥 Video Sharing  
-- **Chunked Streaming**: Large videos encrypted in 64KB chunks for efficient streaming
-- **Metadata Preservation**: Duration, resolution, and bitrate information retained
-- **Fallback Encoding**: Robust processing with multiple codec attempts
-- **Progressive Decryption**: Streaming playback with real-time decryption
-- **File Size Optimization**: Smart compression balancing quality and size
-- **Support for major video formats**: MP4, WebM, AVI, MOV
+- Chunked encryption for large video files
+- Streaming decryption for better performance
+- File size limits for browser compatibility
+- Support for major video formats
 
 ### 📍 Location Sharing
-- **One-time Location**: Share current GPS coordinates with accuracy information
-- **Live Location Tracking**: Continuous location updates with smart movement detection
-- **Interactive Maps**: Embedded OpenStreetMap display with zoom controls
-- **Privacy Controls**: Easy start/stop for live tracking with clear indicators
-- **Encrypted Coordinates**: All location data encrypted before storage/transmission
-- **Battery Optimization**: Intelligent update algorithm (only when significantly moved)
+- One-time current location sharing
+- Live location tracking with automatic updates
+- Encrypted coordinates with accuracy information  
+- Interactive map display with OpenStreetMap
+- Smart update algorithm (only when significantly moved)
 
 ## Running Locally
 
