@@ -175,62 +175,9 @@ class MediaEncryptionManager {
     }
 
     /**
-     * Compress and encrypt image using advanced codec
+     * Compress and encrypt image
      */
     async encryptImage(imageFile, quality = this.compressionLevel) {
-        // Check if advanced codec is available
-        if (typeof AdvancedImageCodec !== 'undefined') {
-            const codec = new AdvancedImageCodec();
-            
-            try {
-                // Process image with advanced codec
-                const processed = await codec.processImage(imageFile, {
-                    maxFileSize: 2 * 1024 * 1024, // 2MB target
-                    quality: this.getQualityLevel(quality),
-                    addWatermark: true
-                });
-
-                const arrayBuffer = await processed.blob.arrayBuffer();
-                const enhancedMetadata = {
-                    type: 'image',
-                    originalName: imageFile.name,
-                    mimeType: processed.blob.type,
-                    width: processed.metadata.processed?.width || 0,
-                    height: processed.metadata.processed?.height || 0,
-                    size: arrayBuffer.byteLength,
-                    originalSize: imageFile.size,
-                    compressionRatio: processed.compressionRatio,
-                    finalQuality: processed.finalQuality,
-                    codec: 'advanced-webp',
-                    timestamp: new Date().toISOString(),
-                    security: processed.metadata.security
-                };
-                
-                return await this.encryptBinaryData(arrayBuffer, enhancedMetadata);
-            } catch (error) {
-                // Fallback to original implementation
-                console.warn('Advanced codec failed, using fallback:', error);
-            }
-        }
-        
-        // Use fallback implementation
-        return this.encryptImageFallback(imageFile, quality);
-    }
-
-    /**
-     * Get quality level string from numeric value
-     */
-    getQualityLevel(quality) {
-        if (quality >= 0.8) return 'high';
-        if (quality >= 0.6) return 'medium';
-        if (quality >= 0.4) return 'low';
-        return 'minimal';
-    }
-
-    /**
-     * Fallback image encryption method
-     */
-    async encryptImageFallback(imageFile, quality = this.compressionLevel) {
         return new Promise((resolve, reject) => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -275,52 +222,9 @@ class MediaEncryptionManager {
     }
 
     /**
-     * Encrypt video with advanced codec and streaming support
+     * Encrypt video with basic compression
      */
     async encryptVideo(videoFile) {
-        // Check if advanced codec is available
-        if (typeof AdvancedVideoCodec !== 'undefined') {
-            const codec = new AdvancedVideoCodec();
-            
-            try {
-                // Process video with advanced codec
-                const processed = await codec.processVideo(videoFile, {
-                    maxFileSize: 50 * 1024 * 1024, // 50MB
-                    quality: 'medium',
-                    enableAudio: true
-                });
-
-                const arrayBuffer = await processed.processedFile.arrayBuffer();
-                const enhancedMetadata = {
-                    type: 'video',
-                    originalName: videoFile.name,
-                    mimeType: videoFile.type,
-                    size: arrayBuffer.byteLength,
-                    duration: processed.metadata.video.duration,
-                    width: processed.metadata.video.width,
-                    height: processed.metadata.video.height,
-                    aspectRatio: processed.metadata.video.aspectRatio,
-                    estimatedBitrate: processed.metadata.processing.estimatedBitrate,
-                    chunks: processed.chunks,
-                    codec: 'advanced-streaming',
-                    timestamp: new Date().toISOString()
-                };
-                
-                return await this.encryptBinaryData(arrayBuffer, enhancedMetadata);
-            } catch (error) {
-                // Fallback to original implementation
-                console.warn('Advanced video codec failed, using fallback:', error);
-            }
-        }
-        
-        // Use fallback implementation
-        return this.encryptVideoFallback(videoFile);
-    }
-
-    /**
-     * Fallback video encryption method
-     */
-    async encryptVideoFallback(videoFile) {
         try {
             const arrayBuffer = await videoFile.arrayBuffer();
             const metadata = {
